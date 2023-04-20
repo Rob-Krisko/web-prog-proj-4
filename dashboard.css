@@ -1,0 +1,143 @@
+/* buyer_dashboard.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    padding: 1rem;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    margin: 0 0.5rem;
+}
+
+nav a:hover {
+    color: #007bff;
+}
+
+.search-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ccc;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f8f9fa;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    padding: 1rem;
+    border: 1px solid #ccc;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown label,
+.dropdown input {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.dropdown input[type="number"] {
+    width: 100%;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+    text-decoration: none;
+}
+
+main {
+    margin: 2rem;
+    display: flex;
+}
+
+.sidenav {
+    flex: 1;
+    margin-right: 2rem;
+}
+
+.sidenav a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    padding: 0.5rem;
+    background-color: #e9ecef;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+
+.sidenav a:hover {
+    color: #007bff;
+    background-color: #f8f9fa;
+}
+
+.content {
+    flex: 4;
+}
+
+.properties-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.property-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    text-decoration: none;
+    color: #333;
+    width: 200px;
+}
+
+.property-card:hover {
+    background-color: #e9ecef;
+}
+
+.property-card-image {
+    width: 100%;
+    height: 150px;
+    background-color: #ccc;
+    overflow: hidden;
+}
+
+.property-card-image img {
+    width: 100%;
+    height: auto;
+}
+
+.property-card-text {
+    margin-top: 1rem;
+    text-align: center;
+}

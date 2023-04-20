@@ -1,0 +1,101 @@
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+header {
+  background: #35424a;
+  padding: 20px;
+  color: white;
+}
+
+.header-content {
+  text-align: center;
+}
+
+.logo {
+  width: 150px; /* Adjust this value to control the display size of the logo */
+  height: auto; /* Maintain aspect ratio */
+  margin-bottom: 10px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.5em;
+}
+
+header h2 {
+  margin: 0;
+  font-size: 1.5em;
+  font-weight: normal;
+}
+
+nav {
+  margin-top: 10px;
+  text-align: center;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  padding: 0 10px;
+}
+
+nav a:hover {
+  background: #efefef;
+  color: #333;
+}
+  
+  main {
+    padding: 20px;
+  }
+  
+  form {
+    width: 50%;
+    margin: 0 auto;
+    background: #efefef;
+    padding: 20px;
+    border: 1px solid #333;
+    border-radius: 5px;
+  }
+  
+  form h2,
+  form h3 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  form label {
+    display: block;
+    margin: 5px 0;
+  }
+  
+  form input,
+  form select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  form button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #333;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+  }
+  
+  form button:hover {
+    background: #35424a;
+  }
+
+  p {
+    text-align: justify;
+    font-size: 1.3rem;
+  }
+  
