@@ -9,9 +9,22 @@ header {
     padding: 1rem;
 }
 
+img {
+    height: auto;
+    width: auto;
+    max-height: 95px;
+    max-width: 250px;
+}
+
+nav {
+    background-color: #35424a;
+    height: 100px;
+}
+
 nav a {
+    font-size: larger;
     text-decoration: none;
-    color: #333;
+    color: white;
     margin: 0 0.5rem;
 }
 

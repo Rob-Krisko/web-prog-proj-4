@@ -9,6 +9,7 @@
 <body>
     <header>
         <nav>
+            <img src="./logo1.png"/>
             <a href="#">Real Estate</a>
             <a href="index.php">Home</a>
             <a href="#">Profile</a>
