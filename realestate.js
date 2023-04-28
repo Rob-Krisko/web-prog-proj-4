@@ -114,9 +114,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  document.getElementById("register-modal-btn").addEventListener("click", function () {
-    document.getElementById("register-modal").style.display = "block";
-  });
+  var registerModalBtn = document.getElementById("register-modal-btn");
+  if (registerModalBtn) {
+    registerModalBtn.addEventListener("click", function () {
+      document.getElementById("register-modal").style.display = "block";
+    });
+  }
 
   document.querySelectorAll(".login-link").forEach(function (element) {
     element.addEventListener("click", function () {
