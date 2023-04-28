@@ -1,71 +1,155 @@
-document.getElementById("register-form").addEventListener("submit", function (event) {
-  event.preventDefault();
+// Registration form handling
+const step1 = document.getElementById("step1");
+const step2 = document.getElementById("step2");
+const step3 = document.getElementById("step3");
 
-  const password = document.getElementById("password").value;
-  const confirmPassword = document.getElementById("confirm-password").value;
+const next1 = document.getElementById("next1");
+const noPayment = document.getElementById("noPayment");
+const yesPayment = document.getElementById("yesPayment");
+const submitRegistration = document.getElementById("submitRegistration");
 
-  if (password !== confirmPassword) {
-    alert("Passwords do not match.");
-  } else {
-    this.submit();
-  }
-});
+// Function to show step 2
+function showStep2() {
+  step1.style.display = "none";
+  step2.style.display = "block";
+}
 
-function detectCardType(cardNumber) {
-    const cardType = document.getElementById("card-type");
-  
-    if (/^4[0-9]{12}(?:[0-9]{3})?$/.test(cardNumber)) {
-      cardType.value = "Visa";
-    } else if (/^5[1-5][0-9]{14}$/.test(cardNumber)) {
-      cardType.value = "MasterCard";
-    } else if (/^3[47][0-9]{13}$/.test(cardNumber)) {
-      cardType.value = "American Express";
-    } else if (/^6(?:011|5[0-9]{2})[0-9]{12}$/.test(cardNumber)) {
-      cardType.value = "Discover";
-    } else if (/^(?:2131|1800|35\d{3})\d{11}$/.test(cardNumber)) {
-      cardType.value = "JCB";
-    } else if (/^3(?:0[0-5]|[68][0-9])[0-9]{11}$/.test(cardNumber)) {
-      cardType.value = "Diners Club";
-    } else {
-      cardType.value = "";
-    }
-  }
+// Function to show step 3
+function showStep3() {
+  step2.style.display = "none";
+  step3.style.display = "block";
+}
 
-  function toggleCreditCardSection() {
-    const creditCardSection = document.getElementById("credit-card-section");
-    const creditCardCheckbox = document.getElementById("credit-card-input");
-  
-    if (creditCardCheckbox.checked) {
-      creditCardSection.style.display = "block";
-    } else {
-      creditCardSection.style.display = "none";
-    }
-  }
+// Function to submit the registration form
+function submitForm() {
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "register.php", true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-  function includeHTML() {
-    var z, i, elmnt, file, xhttp;
-    z = document.getElementsByTagName('*');
-    for (i = 0; i < z.length; i++) {
-      elmnt = z[i];
-      file = elmnt.getAttribute('data-include-html');
-      if (file) {
-        xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4) {
-            if (this.status == 200) {elmnt.innerHTML = this.responseText;}
-            if (this.status == 404) {elmnt.innerHTML = 'Page not found.';}
-            elmnt.removeAttribute('data-include-html');
-            includeHTML();
-          }
-        }
-        xhttp.open('GET', file, true);
-        xhttp.send();
-        return;
+  xhr.onreadystatechange = function () {
+    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+      if (this.responseText === "success") {
+        // Redirect to the login modal upon successful registration
+        document.getElementById("register-modal").style.display = "none";
+        document.getElementById("login-modal").style.display = "block";
+      } else {
+        // Display an error message if the registration failed
+        console.error(this.responseText);
       }
     }
+  };
+
+  const formData = new FormData(document.getElementById("register-form"));
+  const encodedData = new URLSearchParams(formData).toString();
+  xhr.send(encodedData);
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  if (next1) {
+    next1.addEventListener("click", function (event) {
+      event.preventDefault();
+      showStep2();
+    });
   }
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    includeHTML();
+
+  if (noPayment) {
+    noPayment.addEventListener("click", function (event) {
+      event.preventDefault();
+      submitForm();
+    });
+  }
+
+  if (yesPayment) {
+    yesPayment.addEventListener("click", function (event) {
+      event.preventDefault();
+      showStep3();
+    });
+  }
+
+  if (submitRegistration) {
+    submitRegistration.addEventListener("click", function (event) {
+      event.preventDefault();
+      submitForm();
+    });
+  }
+
+  const registerForm = document.getElementById("register-form");
+  if (registerForm) {
+    registerForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const password = document.getElementById("password-register").value;
+      const confirmPassword = document.getElementById("confirm-password").value;
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+      } else {
+        const registerForm = document.getElementById("register-form");
+        if (registerForm) {
+          registerForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+        
+            const password = document.getElementById("password-register").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+        
+            if (password !== confirmPassword) {
+              alert("Passwords do not match.");
+            } else {
+              submitForm();
+            }
+          });
+        }
+        
+      }
+    });
+  }
+
+  const loginModalBtn = document.getElementById("login-modal-btn");
+  if (loginModalBtn) {
+    loginModalBtn.addEventListener("click", function () {
+      const loginModal = document.getElementById("login-modal");
+      if (loginModal) {
+        loginModal.style.display = "block";
+      }
+    });
+  }
+
+  document.getElementById("register-modal-btn").addEventListener("click", function () {
+    document.getElementById("register-modal").style.display = "block";
+  });
+
+  document.querySelectorAll(".login-link").forEach(function (element) {
+    element.addEventListener("click", function () {
+      document.getElementById("login-modal").style.display = "block";
+    });
   });
   
+
+  var modals = document.getElementsByClassName("modal");
+  var closeModalButtons = document.getElementsByClassName("close-modal");
+
+  for (var i = 0; i < closeModalButtons.length; i++) {
+    closeModalButtons[i].addEventListener("click", function () {
+      for (var j = 0; j < modals.length; j++) {
+        modals[j].style.display = "none";
+      }
+    });
+  }
+
+  window.addEventListener("click", function (event) {
+    for (var i = 0; i < modals.length; i++) {
+      if (event.target == modals[i]) {
+        modals[i].style.display = "none";
+      }
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      for (var i = 0; i < modals.length; i++) {
+        modals[i].style.display = "none";
+      }
+    }
+  });
+});
+
