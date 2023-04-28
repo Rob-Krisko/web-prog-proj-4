@@ -1,36 +1,81 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $servername = "localhost";
 $username = "rkrisko1";
 $password = "rkrisko1";
 $dbname = "rkrisko1";
 
+// Create a connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
+// Check the connection
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
-$user_type = $_POST["user_type"];
-$first_name = $_POST["first_name"];
-$last_name = $_POST["last_name"];
-$email = $_POST["email"];
-$username = $_POST["username"];
-$password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-$card_name = isset($_POST["card_name"]) ? $_POST["card_name"] : NULL;
-$card_type = isset($_POST["card_type"]) ? $_POST["card_type"] : NULL;
-$card_number = isset($_POST["card_number"]) ? $_POST["card_number"] : NULL;
-$expiration_date = isset($_POST["expiration_date"]) ? $_POST["expiration_date"] : NULL;
-$coupon = isset($_POST["coupon"]) ? $_POST["coupon"] : NULL;
-$address = isset($_POST["address"]) ? $_POST["address"] : NULL;
-$billing_address = isset($_POST["billing_address"]) ? $_POST["billing_address"] : NULL;
-$phone = isset($_POST["phone"]) ? $_POST["phone"] : NULL;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get the form data
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $is_seller = isset($_POST['isSeller']) ? 1 : 0;
+    $card_type = isset($_POST['cardType']) ? $_POST['cardType'] : "";
+    $card_number = isset($_POST['cardNumber']) ? $_POST['cardNumber'] : "";
+    $card_expiry = isset($_POST['expiryDate']) ? $_POST['expiryDate'] : "";
+    $card_cvv = isset($_POST['cvv']) ? $_POST['cvv'] : "";
 
-$sql = "INSERT INTO users (user_type, first_name, last_name, email, username, password, card_name, card_type, card_number, expiration_date, coupon, address, billing_address, phone) VALUES ('$user_type', '$first_name', '$last_name', '$email', '$username', '$password', '$card_name', '$card_type', '$card_number', '$expiration_date', '$coupon', '$address', '$billing_address', '$phone')";
+    // Validate the form data
+    if (empty($name) || empty($email) || empty($password)) {
+        echo "All fields are required.";
+        exit;
+    }
 
-if ($conn->query($sql) === TRUE) {
-  header("Location: login.html");
-} else {
-  echo "Error: " . $sql . "<br>" . $conn->error;
+    // Check if email is already registered
+    $sql = "SELECT * FROM boxed_users WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        echo "Email is already registered.";
+        exit;
+    }
+
+    // Hash the password
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+    // Determine the user type
+    if ($is_seller) {
+        $user_type = "seller";
+    } else {
+        $user_type = "buyer";
+    }
+
+    // Insert the data into the MySQL database
+    $sql = "INSERT INTO boxed_users (`name`, `email`, `password`, `is_seller`, `is_admin`, `card_type`, `card_number`, `card_expiry`, `card_cvv`) VALUES (?, ?, ?, ?, 0, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+
+    if (!$stmt) {
+        // If the statement preparation failed, print the error message
+        die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+    }
+    $stmt->bind_param("sssissss", $name, $email, $hashed_password, $is_seller, $card_type, $card_number, $card_expiry, $card_cvv);
+    $result = $stmt->execute();
+
+    if ($result) {
+        echo "success";
+    } else {
+        $error_message = "Error: " . $sql . "<br>" . $conn->error;
+        error_log($error_message);
+        echo $error_message;
+    }
+    
+
+    $stmt->close();
 }
 
 $conn->close();
