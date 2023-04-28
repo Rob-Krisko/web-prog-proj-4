@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Replace these values with your actual database credentials
 $servername = "localhost";
 $username = "rkrisko1";
 $password = "rkrisko1";
@@ -9,39 +10,46 @@ $dbname = "rkrisko1";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);
 }
 
-$username = $_POST["username"];
+$email = $_POST["email"];
 $password = $_POST["password"];
 
-$sql = "SELECT id, password, user_type FROM users WHERE username = '$username'";
-$result = $conn->query($sql);
+$sql = "SELECT id, name, password, is_seller, is_admin FROM boxed_users WHERE email = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    if (password_verify($password, $row["password"])) {
-        $_SESSION["user_id"] = $row["id"];
-        $_SESSION["user_type"] = $row["user_type"];
+  $user = $result->fetch_assoc();
 
-        // Redirect users based on their user type
-        if ($row["user_type"] == "buyer") {
-            header("Location: buyer_dashboard.php");
-        } elseif ($row["user_type"] == "seller") {
-            header("Location: seller_dashboard.php");
-        } elseif ($row["user_type"] == "admin") {
-            header("Location: admin_dashboard.html");
-        } else {
-            header("Location: index.php");
-        }
-
-
+  // Verify the hashed password
+  if (password_verify($password, $user["password"])) {
+    $_SESSION["user_id"] = $user["id"];
+    $_SESSION["name"] = $user["name"];
+    
+    if ($user["is_admin"]) {
+      $_SESSION["user_type"] = "admin";
+      header("Location: admin_dashboard.php");
+      exit();
+    } elseif ($user["is_seller"]) {
+      $_SESSION["user_type"] = "seller";
+      header("Location: seller_dashboard.php");
+      exit();
     } else {
-        echo "Incorrect password";
+      $_SESSION["user_type"] = "buyer";
+      header("Location: buyer_dashboard.php");
+      exit();
     }
+  } else {
+    echo "Invalid password.";
+  }
 } else {
-    echo "Username not found";
+  echo "User not found.";
 }
 
+$stmt->close();
 $conn->close();
 ?>
