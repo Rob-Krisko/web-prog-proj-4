@@ -1,3 +1,10 @@
+/* Reset some browser defaults */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
@@ -14,8 +21,8 @@ header {
 }
 
 .logo {
-  width: 150px; /* Adjust this value to control the display size of the logo */
-  height: auto; /* Maintain aspect ratio */
+  width: 150px;
+  height: auto;
   margin-bottom: 10px;
 }
 
@@ -28,6 +35,10 @@ header h2 {
   margin: 0;
   font-size: 1.5em;
   font-weight: normal;
+}
+
+h2 {
+  margin-bottom: 20px;
 }
 
 nav {
@@ -45,57 +56,183 @@ nav a:hover {
   background: #efefef;
   color: #333;
 }
-  
-  main {
-    padding: 20px;
-  }
-  
-  form {
-    width: 50%;
-    margin: 0 auto;
-    background: #efefef;
-    padding: 20px;
-    border: 1px solid #333;
-    border-radius: 5px;
-  }
-  
-  form h2,
-  form h3 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  form label {
-    display: block;
-    margin: 5px 0;
-  }
-  
-  form input,
-  form select {
-    width: 100%;
-    padding: 5px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  form button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background: #333;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    border: none;
-  }
-  
-  form button:hover {
-    background: #35424a;
-  }
 
-  p {
-    text-align: justify;
-    font-size: 1.3rem;
+main {
+  padding: 20px;
+}
+
+/* Registration and login modals */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  max-width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.close-modal {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  display: block;
+}
+
+.submit-btn {
+  width: 100%;
+  background-color: #4caf50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #45a049;
+}
+
+.show {
+  display: block;
+}
+
+/* Add a container class for centering content */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Style for the service card images */
+.service-card img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Add media query to center modal-content for smaller screens */
+@media screen and (max-width: 480px) {
+  .modal-content {
+    width: 90%;
   }
-  
+}
+
+.carousel {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  width: 40%; /* Set the width as a percentage */
+  height: 0; /* Reset the height */
+  padding-bottom: 40%; /* Add padding-bottom equal to the width percentage to make it a square */
+  margin: 0 auto; /* Center the carousel container horizontally */
+}
+.carousel-item {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  transition: opacity 1s;
+}
+
+.carousel-item.active {
+  display: flex;
+}
+
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  font-size: 24px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.carousel-control.prev {
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.carousel-control.next {
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.carousel-item img {
+  position: absolute; /* Position the image absolutely to respect the padding of the container */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Make the image fill the container while preserving its aspect ratio */
+}
+
+.next-btn,
+#noPayment,
+#yesPayment {
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+.next-btn:hover,
+#noPayment:hover,
+#yesPayment:hover {
+  background-color: #45a049;
+}
+
+/* Add this media query to make the modals responsive on smaller screens */
+@media screen and (max-width: 767px) {
+  .modal-content {
+    width: 90%;
+  }
+}
