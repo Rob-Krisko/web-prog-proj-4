@@ -140,9 +140,18 @@ if ($conn->connect_error) {
 
                 ?>
 
-
             </table>
         </div>
+
+        <div class='remove-listing'>
+        <h2>Delete Listing</h2>
+            <form action='#' method='POST'>
+                <p>Please type the ID in to remove Listing</p>
+                <input type='text' name='id'></input>
+                <input type='submit'></input>
+            </form>
+        </div>
+
     </div>
 
 
