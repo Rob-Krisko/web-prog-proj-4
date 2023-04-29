@@ -23,10 +23,10 @@ document.addEventListener("DOMContentLoaded", () => {
       currentPage: page,
       itemsPerPage: itemsPerPage,
     });
-  
+
     try {
       const response = await fetch(url);
-  
+
       if (response.ok) {
         const data = await response.json();
         return data;
@@ -39,17 +39,20 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error fetching properties:", error);
     }
   };
-  
 
-  const displayProperties = (properties) => {
+
+  const displayProperties = (properties, favoriteProperties) => {
     const propertiesContainer = document.getElementById("propertiesContainer");
     propertiesContainer.innerHTML = "";
   
-    console.log("Displaying properties:", properties); // Add this line
+    console.log("Displaying properties:", properties);
   
     if (properties && properties.length > 0) {
       properties.forEach((property) => {
-        const propertyCard = createPropertyCard(property);
+        const isFavorited = favoriteProperties.some(
+          (favorite) => favorite.id === property.id
+        );
+        const propertyCard = createPropertyCard(property, isFavorited);
         propertiesContainer.appendChild(propertyCard);
       });
     } else {
@@ -58,34 +61,93 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   
 
-
-  const createPropertyCard = (property) => {
+  const createPropertyCard = (property, isFavorited) => {
     const propertyCard = document.createElement("div");
     propertyCard.classList.add("property-card");
-
-    console.log("Image URL:", property.image);
-  
-    const propertyImage = property.image ? property.image : "default.jpg";
-  
+    const imageURL = property.image
+      ? `property_images/${property.image}`
+      : "property_images/default.jpg";
+    const favoriteIconHTML = isFavorited ? "&#9733;" : "&#9734;";
     propertyCard.innerHTML = `
-      <div class="property-card-image">
-        <img src="${propertyImage}" alt="${property.address}">
-      </div>
+      <img src="${imageURL}" alt="${property.address}">
       <div class="property-card-text">
         <h3>${property.address}</h3>
         <p>${property.property_type} - ${property.bedrooms} Beds - ${property.bathrooms} Baths</p>
         <p>$${property.price.toLocaleString()}</p>
       </div>
+      <span class="favorite-icon ${isFavorited ? 'favorited' : ''}" data-property-id="${property.id}">${favoriteIconHTML}</span>
     `;
-    propertyCard.addEventListener("click", () => showModal(property));
+    propertyCard.addEventListener("click", (e) => {
+      if (!e.target.classList.contains("favorite-icon")) {
+        showModal(property);
+      }
+    });
+  
+    const favoriteIcon = propertyCard.querySelector(".favorite-icon");
+    favoriteIcon.addEventListener("click", async () => {
+      const isFavorited = favoriteIcon.classList.contains("favorited");
+      const newFavoritedState = !isFavorited;
+      favoriteIcon.classList.toggle("favorited", newFavoritedState);
+      favoriteIcon.innerHTML = newFavoritedState ? "&#9733;" : "&#9734;";
+    
+      const propertyId = favoriteIcon.dataset.propertyId;
+      if (isFavorited) {
+        // Remove favorite
+        await toggleFavoriteProperty(propertyId, "remove");
+      } else {
+        // Add favorite
+        await toggleFavoriteProperty(propertyId, "add");
+      }
+    
+      // Sync the favorite state between the main page and the modal
+      syncFavoriteState(propertyId, newFavoritedState);
+    });
+    
     return propertyCard;
   };
+
+  const toggleFavoriteProperty = async (propertyId, action) => {
+    const formData = new FormData();
+    formData.append("property_id", propertyId);
+    formData.append("action", action);
+
+    try {
+      const response = await fetch("favorite_property.php", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Error toggling favorite property");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const syncFavoriteState = (propertyId, isFavorited) => {
+    const mainPageIcon = document.querySelector(
+      `.property-card .favorite-icon[data-property-id="${propertyId}"]`
+    );
+    const modalIcon = document.querySelector(
+      `#favoritedPropertiesContainer .favorite-icon[data-property-id="${propertyId}"]`
+    );
+    const iconsToUpdate = [mainPageIcon, modalIcon].filter((icon) => icon);
   
+    iconsToUpdate.forEach((icon) => {
+      icon.classList.toggle("favorited", isFavorited);
+      icon.innerHTML = isFavorited ? "&#9733;" : "&#9734;";
+    });
+  };
   
 
   const showModal = (property) => {
     const modal = document.getElementById("propertyModal");
-    document.getElementById("modalImage").src = property.image;
+
+    console.log("Property object:", property);
+    console.log("Image path:", property.image);
+
+    document.getElementById("modalImage").src = 'property_images/' + property.image;
     document.getElementById("modalAddress").textContent = property.address;
     document.getElementById("modalDetails").innerHTML = `
       <li>${property.property_type}</li>
@@ -133,7 +195,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const updateProperties = async () => {
-    const searchInput = document.getElementById("searchInput").value;
+    // Fetch favorite properties for the current user
+    const favoriteProperties = await fetchFavoriteProperties();
+  
+    // Fetch and display the properties with the favorite status
     const homeType = document.querySelector('input[name="propertyType"]:checked')
       .value;
     const minPrice = document.getElementById("minPrice").value || 0;
@@ -146,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ).map((checkbox) => checkbox.value);
   
     const data = await fetchProperties(
-      searchInput,
+      "",
       homeType,
       minPrice,
       maxPrice,
@@ -157,28 +222,86 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     totalPages = Math.ceil(data.totalItems / itemsPerPage);
   
-    displayProperties(data.properties);
+    displayProperties(data.properties, favoriteProperties);
     createPaginationButtons(totalPages);
     attachPaginationListeners();
   };
   
+
   document.getElementById("updateFilters").addEventListener("click", () => {
     currentPage = 1;
     updateProperties();
   });
 
   document.getElementById("resetFilters").addEventListener("click", () => {
-    document.getElementById("searchInput").value = "";
-    document.querySelector('input[name="propertyType"][value="Any"]').checked = true;
     document.getElementById("minPrice").value = "";
     document.getElementById("maxPrice").value = "";
-    Array.from(document.querySelectorAll('input[name="bedrooms"]')).forEach((checkbox) => (checkbox.checked = false));
-    Array.from(document.querySelectorAll('input[name="bathrooms"]')).forEach((checkbox) => (checkbox.checked = false));
+    document.querySelectorAll('input[name="bedrooms"]:checked').forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+    document.querySelectorAll('input[name="bathrooms"]:checked').forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+    document.querySelector('input[name="propertyType"][value="Any"]').checked = true;
 
     currentPage = 1;
     updateProperties();
   });
 
+  const displayFavoritesModal = async () => {
+    const response = await fetch("get_favorite_properties.php");
+    const favorites = await response.json();
+  
+    const modal = document.getElementById("favoritedPropertiesModal");
+    const favoritesContainer = modal.querySelector("#favoritedPropertiesContainer");
+    favoritesContainer.innerHTML = "";
+  
+    favorites.forEach((property) => {
+      const propertyCard = createPropertyCard(property, true); // Pass 'true' as the second argument to set the initial favorite state
+      favoritesContainer.appendChild(propertyCard);
+    });
+  
+    modal.style.display = "block";
+  };
+  
+  
+
+  const closeFavoritesModal = () => {
+    const modal = document.getElementById("favoritedPropertiesModal");
+    modal.style.display = "none";
+  };
+  
+
+  document.getElementById("favoritesLink").addEventListener("click", async (e) => {
+    e.preventDefault(); // Prevent the default action (navigating to the '#' anchor)
+    displayFavoritesModal();
+  });
+  
+
+  const fetchFavoriteProperties = async () => {
+    try {
+      const response = await fetch("get_favorite_properties.php");
+  
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        console.error("Error fetching favorite properties: Response not OK");
+        const errorText = await response.text();
+        console.error("Error details:", errorText);
+      }
+    } catch (error) {
+      console.error("Error fetching favorite properties:", error);
+    }
+  };
+  
+  
+
+  document.getElementById("favoritesModalClose").addEventListener("click", closeFavoritesModal);
+
   let totalPages = 1;
   updateProperties();
+
+  
 });
+
