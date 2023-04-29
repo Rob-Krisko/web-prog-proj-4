@@ -1,59 +1,65 @@
 <?php include 'header.php'; ?>
 
-
-        <main>
-            <div class="sidenav">
-                <!-- Paste the search-filters div here -->
-                <div class="search-filters">
-                    <div class="dropdown">
-                        <select id="homeType">
-                            <option value="Any">Any</option>
-                            <option value="House">House</option>
-                            <option value="Apartment">Apartment</option>
-                            <option value="Condo">Condo</option>
-                            <option value="Townhome">Townhome</option>
-                        </select>
-                    </div>
-                    <div class="dropdown">
-                        <button id="priceDropdown">Price</button>
-                        <div class="dropdown-content">
-                            <label for="minPrice">Min Price</label>
-                            <input type="number" id="minPrice" placeholder="0">
-                            <label for="maxPrice">Max Price</label>
-                            <input type="number" id="maxPrice" placeholder="1000000">
-                            <button id="applyPrice">Apply</button>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <button>Bedrooms</button>
-                        <div class="dropdown-content">
-                            <input type="checkbox" id="bedroom1" name="bedrooms" value="1"> 1 Bedroom<br>
-                            <input type="checkbox" id="bedroom2" name="bedrooms" value="2"> 2 Bedrooms<br>
-                            <input type="checkbox" id="bedroom3Plus" name="bedrooms" value="3+"> 3+ Bedrooms<br>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <button>Bathrooms</button>
-                        <div class="dropdown-content">
-                            <input type="checkbox" id="bathroom1" name="bathrooms" value="1"> 1 Bathroom<br>
-                            <input type="checkbox" id="bathroom2" name="bathrooms" value="2"> 2 Bathrooms<br>
-                            <input type="checkbox" id="bathroom3Plus" name="bathrooms" value="3+"> 3+ Bathrooms<br>
-                        </div>
-                    </div>
-                    <button id="updateFilters">Update Filters</button>
-                    <button id="resetFilters">Reset Filters</button>
-                </div>
-
-                <a href="#">Link</a>
+<main>
+    <div class="sidenav">
+        <div class="search-filters">
+        <input type="text" id="searchInput" placeholder="Search">
+            <div>
+                <span>Home Type:</span>
+                <label><input type="radio" name="propertyType" value="Any" checked> Any</label>
+                <label><input type="radio" name="propertyType" value="House"> House</label>
+                <label><input type="radio" name="propertyType" value="Apartment"> Apartment</label>
+                <label><input type="radio" name="propertyType" value="Condo"> Condo</label>
+                <label><input type="radio" name="propertyType" value="Townhome"> Townhome</label>
             </div>
-            <div class="content">
-                <h2>Buyer Dashboard</h2>
-                <div class="properties-container" id="propertiesContainer">
-                    <!-- Property cards will be added here by JavaScript -->
-                </div>
+            <div>
+                <label for="minPrice">Min Price</label>
+                <input type="number" id="minPrice" placeholder="0" style="width: 48%;">
+                <label for="maxPrice">Max Price</label>
+                <input type="number" id="maxPrice" placeholder="1000000" style="width: 48%;">
             </div>
-        </main>
+            <div>
+                <span>Bedrooms:</span>
+                <label><input type="checkbox" name="bedrooms" value="1"> 1</label>
+                <label><input type="checkbox" name="bedrooms" value="2"> 2</label>
+                <label><input type="checkbox" name="bedrooms" value="3+"> 3+</label>
+            </div>
+            <div>
+                <span>Bathrooms:</span>
+                <label><input type="checkbox" name="bathrooms" value="1"> 1</label>
+                <label><input type="checkbox" name="bathrooms" value="2"> 2</label>
+                <label><input type="checkbox" name="bathrooms" value="3+"> 3+</label>
+            </div>
+            <button id="updateFilters">Update Filters</button>
+            <button id="resetFilters">Reset Filters</button>
+        </div>
+        <a href="#">Link</a>
+    </div>
+    <div class="content">
+        <h2>Buyer Dashboard</h2>
+        <div class="properties-container" id="propertiesContainer">
+            <!-- Property cards will be added here by JavaScript -->
+        </div>
+        <div id="pagination" class="pagination">
+            <!-- Pagination buttons will be added here by JavaScript -->
+        </div>
+    </div>
+</main>
 
-        <script src="buyer_dash.js"></script>
-    </body>
+<div id="propertyModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="modal-image-text-container">
+            <img id="modalImage" src="" alt="">
+            <div class="modal-text">
+                <h2 id="modalAddress"></h2>
+                <ul id="modalDetails"></ul>
+                <p id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="buyer_dash.js"></script>
+</body>
 </html>
