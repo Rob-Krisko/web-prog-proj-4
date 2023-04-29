@@ -24,6 +24,7 @@ if ($conn->connect_error) {
     <div class='side-nav'>
         <a href='./buyer_dashboard.php'>Buyer Dashboard</a>
         <a href='./seller_dashboard.php'>Seller Dashboard</a>
+        <a href='#remove'>Remove Listing</a>
     </div>
 
     <div class='content'>
@@ -34,6 +35,7 @@ if ($conn->connect_error) {
         <div class='idk'>
             <div class='property-num'>
                 <h2> total number of properties: </h2>
+                <h3>
                 <?php
                 $servername = "localhost";
                 $username = "rkrisko1";
@@ -51,18 +53,19 @@ if ($conn->connect_error) {
                     printf("%d", $rowcount);
                 }
 
-
                 /*
                 $result = $conn->query("SELECT COUNT(*) FROM properties")->fetch_array();
                 var_dump($result[0]);
                 */
 
                 ?>
+                </h3>
 
             </div>
 
             <div class='total-value'>
                 <h2>total value on the market: </h2>
+                <h3>
                 <?php
 
 
@@ -73,6 +76,7 @@ if ($conn->connect_error) {
                 }
 
                 ?>
+                </h3>
             </div>
         </div>
 
@@ -143,7 +147,7 @@ if ($conn->connect_error) {
             </table>
         </div>
 
-        <div class='remove-listing'>
+        <div class='remove-listing' id='remove'>
         <h2>Delete Listing</h2>
             <form action='#' method='POST'>
                 <p>Please type the ID in to remove Listing</p>

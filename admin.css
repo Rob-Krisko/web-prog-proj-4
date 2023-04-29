@@ -81,6 +81,7 @@ p {
     border-radius: 10px;
     width: 45%;
     text-align: center;
+    background-color: pink;
 }
 
 
@@ -92,17 +93,34 @@ p {
     border-radius: 10px;
     width: 45%;
     text-align: center;
+    background-color: pink;
 }
 
 .db-list {
+    text-align: center;
+    margin-top: 50px;
     /*
-    margin-top: 100px;
     height: 100px;
     */
 }
 
 .user-list {
-    /*
-    margin-top: 550px;
-    */
+    text-align: center;
+    margin-top: 50px;
+}
+
+.remove-listing {
+    text-align: center;
+    margin-top: 50px;
+}
+
+table {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    border: 1px solid black;
+}
+
+th, td {
+    border: 1px solid black;
 }
