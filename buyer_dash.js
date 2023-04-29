@@ -1,8 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
   let currentPage = 1;
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
 
-  const fetchProperties = async (searchInput = "", homeType = "Any", minPrice = 0, maxPrice = 1000000, bedrooms = [], bathrooms = [], page = 1, itemsPerPage = 5) => {
+  const fetchProperties = async (
+    searchInput = "",
+    homeType = "Any",
+    minPrice = 0,
+    maxPrice = 1000000,
+    bedrooms = [],
+    bathrooms = [],
+    page = 1,
+    itemsPerPage = 8
+  ) => {
     const url = new URL("./get_properties.php", window.location.href);
     url.search = new URLSearchParams({
       search: searchInput,
@@ -11,23 +20,33 @@ document.addEventListener("DOMContentLoaded", () => {
       maxPrice: maxPrice,
       bedrooms: JSON.stringify(bedrooms),
       bathrooms: JSON.stringify(bathrooms),
-      page: page,
+      currentPage: page,
       itemsPerPage: itemsPerPage,
     });
-
+  
     try {
       const response = await fetch(url);
-      const data = await response.json();
-      return data;
+  
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        console.error("Error fetching properties: Response not OK");
+        const errorText = await response.text();
+        console.error("Error details:", errorText);
+      }
     } catch (error) {
       console.error("Error fetching properties:", error);
     }
   };
+  
 
   const displayProperties = (properties) => {
     const propertiesContainer = document.getElementById("propertiesContainer");
     propertiesContainer.innerHTML = "";
-
+  
+    console.log("Displaying properties:", properties); // Add this line
+  
     if (properties && properties.length > 0) {
       properties.forEach((property) => {
         const propertyCard = createPropertyCard(property);
@@ -37,13 +56,21 @@ document.addEventListener("DOMContentLoaded", () => {
       propertiesContainer.innerHTML = "<p>No properties found matching your criteria.</p>";
     }
   };
+  
 
 
   const createPropertyCard = (property) => {
     const propertyCard = document.createElement("div");
     propertyCard.classList.add("property-card");
+
+    console.log("Image URL:", property.image);
+  
+    const propertyImage = property.image ? property.image : "default.jpg";
+  
     propertyCard.innerHTML = `
-      <img src="${property.image}" alt="${property.address}">
+      <div class="property-card-image">
+        <img src="${propertyImage}" alt="${property.address}">
+      </div>
       <div class="property-card-text">
         <h3>${property.address}</h3>
         <p>${property.property_type} - ${property.bedrooms} Beds - ${property.bathrooms} Baths</p>
@@ -53,6 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
     propertyCard.addEventListener("click", () => showModal(property));
     return propertyCard;
   };
+  
+  
 
   const showModal = (property) => {
     const modal = document.getElementById("propertyModal");
@@ -105,20 +134,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updateProperties = async () => {
     const searchInput = document.getElementById("searchInput").value;
-    const homeType = document.querySelector('input[name="propertyType"]:checked').value;
+    const homeType = document.querySelector('input[name="propertyType"]:checked')
+      .value;
     const minPrice = document.getElementById("minPrice").value || 0;
     const maxPrice = document.getElementById("maxPrice").value || 1000000;
-    const bedrooms = Array.from(document.querySelectorAll('input[name="bedrooms"]:checked')).map((checkbox) => checkbox.value);
-    const bathrooms = Array.from(document.querySelectorAll('input[name="bathrooms"]:checked')).map((checkbox) => checkbox.value);
-
-    const data = await fetchProperties(searchInput, homeType, minPrice, maxPrice, bedrooms, bathrooms, currentPage, itemsPerPage);
+    const bedrooms = Array.from(
+      document.querySelectorAll('input[name="bedrooms"]:checked')
+    ).map((checkbox) => checkbox.value);
+    const bathrooms = Array.from(
+      document.querySelectorAll('input[name="bathrooms"]:checked')
+    ).map((checkbox) => checkbox.value);
+  
+    const data = await fetchProperties(
+      searchInput,
+      homeType,
+      minPrice,
+      maxPrice,
+      bedrooms,
+      bathrooms,
+      currentPage,
+      itemsPerPage
+    );
     totalPages = Math.ceil(data.totalItems / itemsPerPage);
-
+  
     displayProperties(data.properties);
     createPaginationButtons(totalPages);
     attachPaginationListeners();
   };
-
+  
   document.getElementById("updateFilters").addEventListener("click", () => {
     currentPage = 1;
     updateProperties();
