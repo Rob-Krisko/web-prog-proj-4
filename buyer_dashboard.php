@@ -3,15 +3,16 @@
 <main>
     <div class="sidenav">
         <div class="search-filters">
-        <input type="text" id="searchInput" placeholder="Search">
+        <p id="welcomeMessage">Welcome <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</p>
             <div>
                 <span>Home Type:</span>
                 <label><input type="radio" name="propertyType" value="Any" checked> Any</label>
                 <label><input type="radio" name="propertyType" value="House"> House</label>
                 <label><input type="radio" name="propertyType" value="Apartment"> Apartment</label>
                 <label><input type="radio" name="propertyType" value="Condo"> Condo</label>
-                <label><input type="radio" name="propertyType" value="Townhome"> Townhome</label>
+                <label><input type="radio" name="propertyType" value="Townhouse"> Townhouse</label>
             </div>
+
             <div>
                 <label for="minPrice">Min Price</label>
                 <input type="number" id="minPrice" placeholder="0" style="width: 48%;">
@@ -33,7 +34,7 @@
             <button id="updateFilters">Update Filters</button>
             <button id="resetFilters">Reset Filters</button>
         </div>
-        <a href="#">Link</a>
+        <a href="#" id="favoritesLink">Favorites</a>
     </div>
     <div class="content">
         <h2>Buyer Dashboard</h2>
@@ -59,6 +60,18 @@
         </div>
     </div>
 </div>
+
+<div id="favoritedPropertiesModal" class="modal">
+  <div class="modal-content">
+    <span id="favoritesModalClose" class="close">&times;</span>
+    <h2>Favorited Properties</h2>
+    <div id="favoritedPropertiesContainer" class="properties-container">
+      <!-- Favorited properties will be displayed here -->
+    </div>
+  </div>
+</div>
+
+
 
 <script src="buyer_dash.js"></script>
 </body>
