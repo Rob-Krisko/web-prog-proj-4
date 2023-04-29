@@ -17,8 +17,8 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 $homeType = isset($_GET['homeType']) ? $_GET['homeType'] : '';
 $minPrice = isset($_GET['minPrice']) ? intval($_GET['minPrice']) : 0;
 $maxPrice = isset($_GET['maxPrice']) ? intval($_GET['maxPrice']) : PHP_INT_MAX;
-$bedrooms = isset($_GET['bedrooms']) ? json_decode($_GET['bedrooms']) : array();
-$bathrooms = isset($_GET['bathrooms']) ? json_decode($_GET['bathrooms']) : array();
+$bedrooms = isset($_GET['bedrooms']) ? json_decode($_GET['bedrooms']) : [];
+$bathrooms = isset($_GET['bathrooms']) ? json_decode($_GET['bathrooms']) : [];
 $currentPage = isset($_GET['currentPage']) ? intval($_GET['currentPage']) : 1;
 $itemsPerPage = isset($_GET['itemsPerPage']) ? intval($_GET['itemsPerPage']) : 10;
 
@@ -33,12 +33,29 @@ if ($homeType != '' && $homeType != 'Any') {
 }
 
 if (!empty($bedrooms)) {
-    $sql .= "AND bedrooms IN (" . implode(',', $bedrooms) . ") ";
-}
-
-if (!empty($bathrooms)) {
-    $sql .= "AND bathrooms IN (" . implode(',', $bathrooms) . ") ";
-}
+    $bedrooms_conditions = [];
+    foreach ($bedrooms as $bedroom) {
+      if ($bedroom == '3+') {
+        $bedrooms_conditions[] = "bedrooms >= 3";
+      } else {
+        $bedrooms_conditions[] = "bedrooms = " . intval($bedroom);
+      }
+    }
+    $sql .= " AND (" . implode(' OR ', $bedrooms_conditions) . ")";
+  }
+  
+  if (!empty($bathrooms)) {
+    $bathrooms_conditions = [];
+    foreach ($bathrooms as $bathroom) {
+      if ($bathroom == '3+') {
+        $bathrooms_conditions[] = "bathrooms >= 3";
+      } else {
+        $bathrooms_conditions[] = "bathrooms = " . intval($bathroom);
+      }
+    }
+    $sql .= " AND (" . implode(' OR ', $bathrooms_conditions) . ")";
+  }
+  
 
 // First, fetch the total number of properties that match the filters
 $sqlCount = str_replace("SELECT *", "SELECT COUNT(*) as total", $sql);
