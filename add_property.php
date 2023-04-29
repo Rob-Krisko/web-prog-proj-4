@@ -26,7 +26,7 @@ $address = $_POST["address"];
 $price = $_POST["price"];
 $bedrooms = $_POST["bedrooms"];
 $bathrooms = $_POST["bathrooms"];
-$type = $_POST["type"] ?? "";
+$type = strtolower($_POST["type"]); // Convert type to lowercase
 $area = $_POST["area"] ?? "";
 $year_built = $_POST["year_built"] ?? "";
 $description = $_POST["description"] ?? "";
@@ -37,6 +37,7 @@ if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
     $targetDir = "property_images/";
     $targetFile = $targetDir . $imageName;
     move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile);
+    chmod($targetFile, 0644); // Set the permissions of the uploaded file
 }
 
 $sql = "INSERT INTO properties (user_id, address, price, bedrooms, bathrooms, image, property_type, sqft, year_built, description)
@@ -50,7 +51,6 @@ if (!$stmt) {
 }
 
 $stmt->bind_param("isdiisssss", $userId, $address, $price, $bedrooms, $bathrooms, $imageName, $type, $area, $year_built, $description);
-
 
 if (!$stmt->execute()) {
     echo "Error executing the statement: " . $stmt->error;
