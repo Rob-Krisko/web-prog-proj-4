@@ -1,0 +1,129 @@
+<?php include './header.php';
+session_start();
+
+
+$servername = "localhost";
+$username = "rkrisko1";
+$password = "rkrisko1";
+$dbname = "rkrisko1";
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+?>
+
+<html>
+
+<head>
+    <link rel='stylesheet' href='./admin.css'>
+</head>
+
+<body>
+
+    <div class='side-nav'>
+        <a href='./buyer_dashboard.php'>Buyer Dashboard</a>
+        <a href='./seller_dashboard.php'>Seller Dashboard</a>
+    </div>
+
+    <div class='content'>
+        <h1>Hello,
+            <?php echo $_SESSION["name"] ?>
+        </h1>
+
+        <div class='idk'>
+            <div class='property-num'>
+                <h2> total number of properties: </h2>
+                <?php
+                $servername = "localhost";
+                $username = "rkrisko1";
+                $password = "rkrisko1";
+                $dbname = "rkrisko1";
+                $conn = new mysqli($servername, $username, $password, $dbname);
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                
+                $sql = "SELECT * from properties";
+                if ($result = mysqli_query($conn, $sql)) {
+                    $rowcount = mysqli_num_rows($result);
+
+                    printf("%d", $rowcount);
+                }
+                
+                
+                /*
+                $result = $conn->query("SELECT COUNT(*) FROM properties")->fetch_array();
+                var_dump($result[0]);
+                */
+                
+                ?>
+
+            </div>
+
+            <div class='total-value'>
+                <h2>total value on the market: </h2>
+                <?php 
+
+
+
+                $result = mysqli_query($conn, "SELECT SUM(price) FROM properties");
+                while($row = mysqli_fetch_array($result)) {
+                    echo "$".$row['SUM(price)'];
+                }
+
+                ?>
+            </div>
+        </div>
+
+
+        <div class='db-list'>
+            <h2>List of Database:</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>User_id</th>
+                    <th>Address</th>
+                    <th>Price</th>
+                    <th>Bedrooms</th>
+                    <th>Bathrooms</th>
+                    <th>Property Type</th>
+                    <th>Year Built</th>
+                    <th>Lot Size</th>
+                    <th>SQFT</th>
+                    <th>DESC.</th>
+                    <th>image path</th>
+                    <th>created at</th>
+                    <th>image</th>
+                </tr>
+                <?php 
+                
+                $sql = "SELECT * FROM properties";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        echo "<tr><td>". $row["id"]. "</td><td>". $row["user_id"]. "</td><td>". $row["address"]. "</td><td>". $row["price"]. "</td><td>". $row["bedrooms"]. "</td><td>". $row["bathrooms"]. "</td><td>". $row["property_type"]. "</td><td>". $row["year_built"]. "</td><td>". $row["sqft"]. "</td><td>". $row["lot_size"]. "</td><td>". $row["description"]. "</td><td>". $row["image_path"]. "</td><td>". $row["created_at"]. "</td><td>". $row["image"]. "</td></tr>";
+                    } 
+                }
+                else {
+                    echo "no results";
+                }
+                
+                
+                ?>
+
+
+            </table>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
+
+
+
+<?php $conn->close(); ?>
