@@ -43,33 +43,33 @@ if ($conn->connect_error) {
                 if ($conn->connect_error) {
                     die("Connection failed: " . $conn->connect_error);
                 }
-                
+
                 $sql = "SELECT * from properties";
                 if ($result = mysqli_query($conn, $sql)) {
                     $rowcount = mysqli_num_rows($result);
 
                     printf("%d", $rowcount);
                 }
-                
-                
+
+
                 /*
                 $result = $conn->query("SELECT COUNT(*) FROM properties")->fetch_array();
                 var_dump($result[0]);
                 */
-                
+
                 ?>
 
             </div>
 
             <div class='total-value'>
                 <h2>total value on the market: </h2>
-                <?php 
+                <?php
 
 
 
                 $result = mysqli_query($conn, "SELECT SUM(price) FROM properties");
-                while($row = mysqli_fetch_array($result)) {
-                    echo "$".$row['SUM(price)'];
+                while ($row = mysqli_fetch_array($result)) {
+                    echo "$" . $row['SUM(price)'];
                 }
 
                 ?>
@@ -82,35 +82,62 @@ if ($conn->connect_error) {
             <table>
                 <tr>
                     <th>ID</th>
-                    <th>User_id</th>
                     <th>Address</th>
                     <th>Price</th>
                     <th>Bedrooms</th>
                     <th>Bathrooms</th>
                     <th>Property Type</th>
                     <th>Year Built</th>
-                    <th>Lot Size</th>
-                    <th>SQFT</th>
-                    <th>DESC.</th>
-                    <th>image path</th>
+                    <th>Sqft</th>
                     <th>created at</th>
-                    <th>image</th>
                 </tr>
-                <?php 
-                
+                <?php
+
                 $sql = "SELECT * FROM properties";
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
-                        echo "<tr><td>". $row["id"]. "</td><td>". $row["user_id"]. "</td><td>". $row["address"]. "</td><td>". $row["price"]. "</td><td>". $row["bedrooms"]. "</td><td>". $row["bathrooms"]. "</td><td>". $row["property_type"]. "</td><td>". $row["year_built"]. "</td><td>". $row["sqft"]. "</td><td>". $row["lot_size"]. "</td><td>". $row["description"]. "</td><td>". $row["image_path"]. "</td><td>". $row["created_at"]. "</td><td>". $row["image"]. "</td></tr>";
-                    } 
-                }
-                else {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr><td>" . $row["id"] . "</td><td>" . $row["address"] . "</td><td>" . $row["price"] . "</td><td>" . $row["bedrooms"] . "</td><td>" . $row["bathrooms"] . "</td><td>" . $row["property_type"] . "</td><td>" . $row["year_built"] . "</td><td>" . $row["sqft"] . "</td><td>" . $row["created_at"] . "</td><tr>";
+                    }
+                } else {
                     echo "no results";
                 }
-                
-                
+
+
+                ?>
+
+
+            </table>
+        </div>
+
+        <div class='user-list'>
+            <h2>List of Users:</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>User Type</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Phone</th>
+                    <th>Created</th>
+                </tr>
+                <?php
+
+                $sql = "SELECT * FROM users";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr><td>" . $row["id"] . "</td><td>" . $row["user_type"] . "</td><td>" . $row["first_name"] . "</td><td>" . $row["last_name"] . "</td><td>" . $row["email"] . "</td><td>" . $row["username"] . "</td><td>" . $row["phone"] . "</td><td>" . $row["created_at"] . "</td><tr>";
+                    }
+                } else {
+                    echo "no results";
+                }
+
+
                 ?>
 
 

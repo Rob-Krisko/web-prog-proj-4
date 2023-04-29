@@ -29,8 +29,8 @@ html {
 
 table {
     text-align: center;
-    border-collapse: collapse;
     border: black;
+    border-collapse: collapse;
 }
 
 th {
@@ -95,6 +95,14 @@ p {
 }
 
 .db-list {
+    /*
     margin-top: 100px;
     height: 100px;
+    */
+}
+
+.user-list {
+    /*
+    margin-top: 550px;
+    */
 }
