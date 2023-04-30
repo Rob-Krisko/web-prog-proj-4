@@ -65,8 +65,66 @@ $result = $stmt->get_result();
 
     </main>
 
+    <div id="add-property-modal" class="modal add-property-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddPropertyModal();">&times;</span>
+            <h3>Add New Property</h3>
+            <form id="add-property-form" enctype="multipart/form-data">
+                <div>
+                    <label for="address">Address *</label>
+                    <input type="text" id="address" name="address" placeholder="123 Main St" required>
+                </div>
+                <div>
+                    <label for="price">Price *</label>
+                    <input type="number" id="price" name="price" placeholder="0" required>
+                </div>
+                <div>
+                    <label for="bedrooms">Bedrooms *</label>
+                    <input type="number" id="bedrooms" name="bedrooms" placeholder="0" required>
+                </div>
+                <div>
+                    <label for="bathrooms">Bathrooms *</label>
+                    <input type="number" id="bathrooms" name="bathrooms" placeholder="0" required>
+                </div>
+                <div>
+                    <label for="image">Property Image</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                </div>
+                <div>
+                    <label for="type">Property Type</label>
+                    <select id="type" name="type">
+                        <option value="house" selected>House</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="condo">Condo</option>
+                        <option value="townhouse">Townhouse</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="area">Area (sq ft)</label>
+                    <input type="number" id="area" name="area" placeholder="0">
+                </div>
+                <div>
+                    <label for="year_built">Year Built</label>
+                    <input type="number" id="year_built" name="year_built" placeholder="2000">
+                </div>
+                <div>
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Write a brief description of the property"></textarea>
+                </div>
+                <button type="submit">Add Property</button>
+            </form>
+        </div>
+    </div>
+
+
     <script src="dash.js"></script>
-    <?php include("footer.php"); ?>
+    <footer>
+        <p>&copy; 2023 Boxed Estates. All rights reserved.</p>
+    </footer>
+
+    </body>
+</html>
+
 
 <?php
 $stmt->close();
