@@ -428,3 +428,28 @@ footer {
     padding: 0;
   }
   
+.line-graphs-container {
+    display: flex;
+    justify-content: space-between;
+}
+.line-graph {
+    position: relative;
+    width: 45%;
+    margin-bottom: 40px;
+}
+.axis-label {
+    position: absolute;
+    font-size: 14px;
+}
+.y-label {
+    top: 50%;
+    left: -30px;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: center;
+}
+.x-label {
+    left: 50%;
+    bottom: -30px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
