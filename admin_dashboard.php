@@ -1,169 +1,89 @@
-<?php include './header.php';
+<?php
 session_start();
 
-
-$servername = "localhost";
-$username = "rkrisko1";
-$password = "rkrisko1";
-$dbname = "rkrisko1";
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if (!isset($_SESSION["user_id"]) || $_SESSION["user_type"] != "admin") {
+    header("Location: index.php");
+    exit;
 }
-
 ?>
 
-<html>
+<?php include 'header.php'; ?>
 
-<head>
-    <link rel='stylesheet' href='./admin.css'>
-</head>
-
-<body>
-
-    <div class='side-nav'>
-        <a href='./buyer_dashboard.php'>Buyer Dashboard</a>
-        <a href='./seller_dashboard.php'>Seller Dashboard</a>
-        <a href='#remove'>Remove Listing</a>
+<main>
+    <div class="sidenav">
+        <p id="welcomeMessage">Welcome <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</p>
+        <a href="#" id="managePropertiesLink">Manage Properties</a>
+        <a href="#" id="manageUsersLink">Manage Users</a>
+        <a href="#" id="viewAnalyticsLink">View Analytics</a>
     </div>
+    <div class="content">
 
-    <div class='content'>
-        <h1>Hello,
-            <?php echo $_SESSION["name"] ?>
-        </h1>
-
-        <div class='idk'>
-            <div class='property-num'>
-                <h2> total number of properties: </h2>
-                <h3>
-                <?php
-                $servername = "localhost";
-                $username = "rkrisko1";
-                $password = "rkrisko1";
-                $dbname = "rkrisko1";
-                $conn = new mysqli($servername, $username, $password, $dbname);
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-
-                $sql = "SELECT * from properties";
-                if ($result = mysqli_query($conn, $sql)) {
-                    $rowcount = mysqli_num_rows($result);
-
-                    printf("%d", $rowcount);
-                }
-
-                /*
-                $result = $conn->query("SELECT COUNT(*) FROM properties")->fetch_array();
-                var_dump($result[0]);
-                */
-
-                ?>
-                </h3>
-
-            </div>
-
-            <div class='total-value'>
-                <h2>total value on the market: </h2>
-                <h3>
-                <?php
-
-
-
-                $result = mysqli_query($conn, "SELECT SUM(price) FROM properties");
-                while ($row = mysqli_fetch_array($result)) {
-                    echo "$" . $row['SUM(price)'];
-                }
-
-                ?>
-                </h3>
-            </div>
-        </div>
-
-
-        <div class='db-list'>
-            <h2>List of Database:</h2>
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Address</th>
-                    <th>Price</th>
-                    <th>Bedrooms</th>
-                    <th>Bathrooms</th>
-                    <th>Property Type</th>
-                    <th>Year Built</th>
-                    <th>Sqft</th>
-                    <th>created at</th>
-                </tr>
-                <?php
-
-                $sql = "SELECT * FROM properties";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr><td>" . $row["id"] . "</td><td>" . $row["address"] . "</td><td>" . $row["price"] . "</td><td>" . $row["bedrooms"] . "</td><td>" . $row["bathrooms"] . "</td><td>" . $row["property_type"] . "</td><td>" . $row["year_built"] . "</td><td>" . $row["sqft"] . "</td><td>" . $row["created_at"] . "</td><tr>";
-                    }
-                } else {
-                    echo "no results";
-                }
-
-
-                ?>
-
-
-            </table>
-        </div>
-
-        <div class='user-list'>
-            <h2>List of Users:</h2>
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>User Type</th>
-                    <th>Firstname</th>
-                    <th>Lastname</th>
-                    <th>Email</th>
-                    <th>Username</th>
-                    <th>Phone</th>
-                    <th>Created</th>
-                </tr>
-                <?php
-
-                $sql = "SELECT * FROM users";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr><td>" . $row["id"] . "</td><td>" . $row["user_type"] . "</td><td>" . $row["first_name"] . "</td><td>" . $row["last_name"] . "</td><td>" . $row["email"] . "</td><td>" . $row["username"] . "</td><td>" . $row["phone"] . "</td><td>" . $row["created_at"] . "</td><tr>";
-                    }
-                } else {
-                    echo "no results";
-                }
-
-
-                ?>
-
-            </table>
-        </div>
-
-        <div class='remove-listing' id='remove'>
-        <h2>Delete Listing</h2>
-            <form action='#' method='POST'>
-                <p>Please type the ID in to remove Listing</p>
-                <input type='text' name='id'></input>
-                <input type='submit'></input>
+        <!-- Update Property Modal -->
+        <div class="modal" id="updatePropertyModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Update Property Details</h2>
+            <form id="updatePropertyForm">
+            <!-- Add form fields to update property details here -->
+            <button type="submit">Update</button>
             </form>
         </div>
+        </div>
 
+        <!-- Remove User Modal -->
+        <div class="modal" id="removeUserModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Are you sure you want to remove this user?</h2>
+            <form id="removeUserForm">
+            <!-- Add a hidden input field to store user ID -->
+            <input type="hidden" id="removeUserId" name="user_id">
+            <button type="submit">Yes, remove</button>
+            </form>
+        </div>
+        </div>
+
+        <h2>Admin Dashboard</h2>
+        <div id="adminDashboardContent">
+            <!-- Content for managing properties, users, and analytics will be loaded here -->
+            <div class="analytics-container" id="analyticsSection">
+                <div>
+                    <span>Total Users:</span>
+                    <span id="totalUsers">0</span>
+                </div>
+                <div>
+                    <span>Total Properties:</span>
+                    <span id="totalProperties">0</span>
+                </div>
+                <div>
+                    <span>Average Property Price:</span>
+                    <span id="averagePropertyPrice">$0</span>
+                </div>
+            </div>
+            <div class="line-graphs-container">
+                <div class="line-graph">
+                    <h3>Total Property Value</h3>
+                    <canvas id="totalPropertyValueGraph"></canvas>
+                </div>
+                <div class="line-graph">
+                    <h3>Total Users</h3>
+                    <canvas id="totalUsersGraph"></canvas>
+                </div>
+            </div>
+            <div id="propertiesSection" style="display: none;">
+                <div id="propertiesContainer">
+                    <!-- Property cards will be inserted here -->
+                </div>
+            </div>
+            <div id="usersSection" style="display: none;">
+                <div id="usersContainer">
+                    <!-- User cards will be inserted here -->
+                </div>
+            </div>
+        </div>
     </div>
+</main>
 
-
-
+<script src="admin_dash.js"></script>
 </body>
-
 </html>
-
-
-
-<?php $conn->close(); ?>
