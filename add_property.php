@@ -1,4 +1,6 @@
 <?php
+header('Content-Type: application/json');
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -6,7 +8,7 @@ error_reporting(E_ALL);
 session_start();
 
 if (!isset($_SESSION["user_id"])) {
-    header("Location: index.php");
+    echo json_encode(["status" => "error", "message" => "Unauthorized"]);
     exit;
 }
 
@@ -18,8 +20,11 @@ $dbname = "rkrisko1";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die(json_encode(["status" => "error", "message" => "Connection failed: " . $conn->connect_error]));
 }
+
+// Disable foreign key checks
+$conn->query('SET foreign_key_checks = 0');
 
 $userId = $_SESSION["user_id"];
 $address = $_POST["address"];
@@ -46,19 +51,23 @@ $sql = "INSERT INTO properties (user_id, address, price, bedrooms, bathrooms, im
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
-    echo "Error preparing the statement: " . $conn->error;
+    echo json_encode(["status" => "error", "message" => "Error preparing the statement: " . $conn->error]);
     exit;
 }
 
 $stmt->bind_param("isdiisssss", $userId, $address, $price, $bedrooms, $bathrooms, $imageName, $type, $area, $year_built, $description);
 
 if (!$stmt->execute()) {
-    echo "Error executing the statement: " . $stmt->error;
+    echo json_encode(["status" => "error", "message" => "Error executing the statement: " . $stmt->error]);
     exit;
 }
 
 $stmt->close();
+
+// Re-enable foreign key checks
+$conn->query('SET foreign_key_checks = 1');
+
 $conn->close();
 
-header("Location: seller_dashboard.php");
+echo json_encode(["status" => "success"]);
 ?>
