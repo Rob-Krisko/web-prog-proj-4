@@ -193,13 +193,19 @@ main {
 
 .carousel-control.prev {
   left: 0;
-  transform: translateY(-50%);
+  top: auto;
+  bottom: 10px; 
+  transform: none; 
 }
 
 .carousel-control.next {
   right: 0;
-  transform: translateY(-50%);
+  top: auto;
+  bottom: 10px; 
+  transform: none; 
 }
+
+
 
 .carousel-item img {
   position: absolute; /* Position the image absolutely to respect the padding of the container */
