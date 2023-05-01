@@ -50,19 +50,19 @@ $logged_in = isset($_SESSION["user_id"]);
   <div class="container">
     <section class="carousel">
       <div class="carousel-item active">
-        <img src="d1.jpg" alt="Real Estate Listings">
+        <img src="slide1.jpg" alt="Real Estate Listings">
       </div>
       <div class="carousel-item">
-        <img src="d2.jpg" alt="Personalized Assistance">
+        <img src="slide2.jpg" alt="Personalized Assistance">
       </div>
       <div class="carousel-item">
-        <img src="d3.jpg" alt="Market Insights">
+        <img src="slide3.jpg" alt="Market Insights">
       </div>
       <div class="carousel-item">
-        <img src="d4.jpg" alt="Why Choose Us">
+        <img src="slide4.jpg" alt="Why Choose Us">
       </div>
       <div class="carousel-item">
-        <img src="d5.jpg" alt="CTA">
+        <img src="slide5.jpg" alt="CTA">
       </div>
       <button class="carousel-control prev">&#10094;</button>
       <button class="carousel-control next">&#10095;</button>
