@@ -64,20 +64,29 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["user_type"] != "admin") {
                 <div class="line-graph">
                     <h3>Total Property Value</h3>
                     <canvas id="totalPropertyValueGraph"></canvas>
+                    <span class="axis-label y-label">Value</span>
+                    <span class="axis-label x-label">Time</span>
                 </div>
                 <div class="line-graph">
                     <h3>Total Users</h3>
                     <canvas id="totalUsersGraph"></canvas>
+                    <span class="axis-label y-label">Users</span>
+                    <span class="axis-label x-label">Time</span>
                 </div>
             </div>
+
             <div id="propertiesSection" style="display: none;">
                 <div id="propertiesContainer">
-                    <!-- Property cards will be inserted here -->
+                    <div class="admin-card">
+                        <!-- Property card content -->
+                    </div>
                 </div>
             </div>
             <div id="usersSection" style="display: none;">
                 <div id="usersContainer">
-                    <!-- User cards will be inserted here -->
+                    <div class="admin-card">
+                        <!-- Property card content -->
+                    </div>
                 </div>
             </div>
         </div>
