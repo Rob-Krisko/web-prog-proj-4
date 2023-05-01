@@ -29,7 +29,7 @@ $logged_in = isset($_SESSION["user_id"]);
             // If the user is logged in
             echo '
               <a href="index.php">Home</a>
-              <a href="' . ($_SESSION["user_type"] == "buyer" ? "buyer_dashboard.php" : ($_SESSION["user_type"] == "seller" ? "seller_dashboard.php" : "admin_dashboard.html")) . '">Dashboard</a>
+              <a href="' . ($_SESSION["user_type"] == "buyer" ? "buyer_dashboard.php" : ($_SESSION["user_type"] == "seller" ? "seller_dashboard.php" : "admin_dashboard.php")) . '">Dashboard</a>
               <a href="logout.php">Logout</a>
             ';
           } else {
@@ -50,19 +50,19 @@ $logged_in = isset($_SESSION["user_id"]);
   <div class="container">
     <section class="carousel">
       <div class="carousel-item active">
-        <img src="1682725015_carboard_tent.jpg" alt="Real Estate Listings">
+        <img src="d1.jpg" alt="Real Estate Listings">
       </div>
       <div class="carousel-item">
-        <img src="1682726357_street_full_size_box.jpg" alt="Personalized Assistance">
+        <img src="d2.jpg" alt="Personalized Assistance">
       </div>
       <div class="carousel-item">
-        <img src="1682726498_surburb_box.jpg" alt="Market Insights">
+        <img src="d3.jpg" alt="Market Insights">
       </div>
       <div class="carousel-item">
-        <img src="1682724734_alley_box.jpg" alt="Why Choose Us">
+        <img src="d4.jpg" alt="Why Choose Us">
       </div>
       <div class="carousel-item">
-        <img src="1682863872_house8.jpg" alt="CTA">
+        <img src="d5.jpg" alt="CTA">
       </div>
       <button class="carousel-control prev">&#10094;</button>
       <button class="carousel-control next">&#10095;</button>
@@ -143,7 +143,6 @@ $logged_in = isset($_SESSION["user_id"]);
       </div>
     </div>
 
-    <script src="carousel.js"></script>
     <script src="realestate.js"></script>
   </body>
 </html>
